@@ -35,7 +35,7 @@ export default function Form<T extends FormFields>({ formTitle, description, onS
     [formState, doValidation]
   )
 
-  const validateState = (e: React.ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const errors = Object.keys(formState).map((name) => {
@@ -52,11 +52,11 @@ export default function Form<T extends FormFields>({ formTitle, description, onS
     const hasErrors = errors.some((err) => !!err)
 
     if (!hasErrors) {
-      handleSubmit()
+      submitForm()
     }
   }
 
-  const handleSubmit = () => {
+  const submitForm = () => {
     const fields: (keyof T)[] = Object.keys(formFields)
     const response = fields.reduce((res, name) => {
       return { ...res, [name]: formState[name].value }
@@ -119,7 +119,7 @@ export default function Form<T extends FormFields>({ formTitle, description, onS
         <div className="md:grid md:grid-cols-4 md:gap-6">
           {(formTitle || description) && renderFormHeader()}
           <div className="mt-5 md:mt-0 md:col-span-3">
-            <form onSubmit={validateState}>
+            <form onSubmit={handleSubmit}>
               <div className="shadow overflow-hidden sm:rounded-md">
                 <div className="px-4 py-5 bg-white sm:p-6">
                   <div className="grid grid-cols-6 gap-6">{renderInputs()}</div>

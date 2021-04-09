@@ -47,5 +47,9 @@ The form component renders the fields depending on their type. Even though in th
 
 I chose to implement the validation feature as a simple function to be passed to the field configuration that returns an error string when there's a validation error. An empty string indicates _no error_. This way the component is more generic, and lets the user be flexible. If I was working on this project professionally, I would consider to create a collection of basic validation functions and provide it to be used in combination with the Form component.
 
+### `useFormUtils` hook
+
+I created a hook to split out initialization of the form state and validation logic into their own file. This keeps the Form component cleaner. Event handlers are kept in the Form component itself.
+
 ### Tests
 Tests covering the functionality in Form component, and in App covering the return values are added.

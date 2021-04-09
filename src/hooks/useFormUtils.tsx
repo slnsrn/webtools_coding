@@ -4,10 +4,6 @@ import { FormFields } from '../types/Field'
 
 const requiredErrorMessage = 'This field is required.'
 
-//i used this hook to separate util functions from component.
-//This could have been a 'util.js*ts' file.
-//I preferred to have a hook to keep the formFields for the validation, rather than sending the whole object to the function on every call.
-
 export default function useFormUtils<T extends FormFields>(fields: T) {
   /**
    * creates an object from given FormFields to keep the form state
