@@ -7,7 +7,7 @@ import ResponseBar from './components/ResponseBar'
 import { FormFields } from './types/Field'
 
 // the fields are kept here for visibility, but it can also be kept in another file
-const formFields = {
+export const formFields = {
   firstName: {
     label: 'First Name',
     required: true,
@@ -45,7 +45,7 @@ function App() {
         <h2 className="text-md font-bold text-purple-800 mb-4"> Submitted values</h2>
         {Object.keys(formValues!).map((value) => {
           return (
-            <div className="text-sm font-bold text-gray-600 my-2 w-full flex space-x-4">
+            <div data-testid={value} key={value} className="text-sm font-bold text-gray-600 my-2 w-full flex space-x-4">
               <span className="w-1/2">{value}:</span>
               <span className="w-1/2">{formValues![value as keyof typeof formFields] || '-'}</span>
             </div>
