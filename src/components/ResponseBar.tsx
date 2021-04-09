@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-
 import IResponse from '../types/Response'
 
 export interface ResponseBarProps {

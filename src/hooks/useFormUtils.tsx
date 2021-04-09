@@ -1,8 +1,6 @@
 import { useCallback } from 'react'
 import { FormState } from '../components/Form'
-
 import { FormFields } from '../types/Field'
-
 
 const requiredErrorMessage = 'This field is required.'
 
@@ -42,5 +40,8 @@ export default function useFormUtils<T extends FormFields>(fields: T) {
     [fields]
   )
 
-  return { initialState: createInitialState(), doValidation }
+  return {
+    initialState: createInitialState(),
+    doValidation,
+  }
 }

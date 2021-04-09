@@ -1,10 +1,7 @@
 import { useState } from 'react'
-
-import IResponse from './types/Response'
-
 import Form from './components/Form'
 import ResponseBar from './components/ResponseBar'
-import { FormFields } from './types/Field'
+import IResponse from './types/Response'
 
 // the fields are kept here for visibility, but it can also be kept in another file
 export const formFields = {

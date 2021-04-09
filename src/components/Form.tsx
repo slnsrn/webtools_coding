@@ -1,8 +1,6 @@
-import React, { useState, useCallback } from 'react'
-
+import React, { useCallback, useState } from 'react'
 import useFormUtils from '../hooks/useFormUtils'
 import { FormFields } from '../types/Field'
-
 import TextInput from './TextInput'
 
 export type FormState<T extends FormFields> = {
@@ -16,7 +14,6 @@ interface FormProps<T extends FormFields> {
 }
 
 export default function Form<T extends FormFields>({ formTitle, description, onSubmit, formFields }: FormProps<T>) {
-
   const { initialState, doValidation } = useFormUtils(formFields)
   const [formState, setFormState] = useState<FormState<T>>(initialState)
   const [buttonDisabled, setButtonDisabled] = useState(true)

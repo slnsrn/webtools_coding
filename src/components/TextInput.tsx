@@ -1,5 +1,4 @@
 import React from 'react'
-
 import { IField } from '../types/Field'
 
 interface ITextInput extends IField {
