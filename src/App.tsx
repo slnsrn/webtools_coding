@@ -6,7 +6,7 @@ import Form from './components/Form'
 import ResponseBar from './components/ResponseBar'
 import { FormFields } from './types/Field'
 
-// i kept the fields here as it is a short one, but normal projects it can be kept in another file
+// the fields are kept here for visibility, but it can also be kept in another file
 const formFields = {
   firstName: {
     label: 'First Name',

@@ -5,6 +5,7 @@ export interface IField {
   placeholder?: string
   disabled?: boolean
   required?: boolean
+  /** @returns Error description. An empty string means no error */
   validate?: (value: string) => string
 }
 

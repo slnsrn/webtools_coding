@@ -1,46 +1,51 @@
-# Getting Started with Create React App
+# Wooga Form Component
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Configuration
 
-## Available Scripts
+The project is created by `create-react-app` command with Typescript setup for convenience.
+Personally I am a big fan of **tailwindcss**, so I use it almost all the projects - whenever possible. Since Create React App doesn't let us override the PostCSS configuration natively, I used [_CRACO_](https://github.com/gsoft-inc/craco) to be able to configure tailwind.
 
-In the project directory, you can run:
+**to install**: `yarn`
+**to start** : `yarn start`
+**to test** : `yarn test`
 
-### `yarn start`
+## Form
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Props
+```ts
+interface  FormProps<T  extends  FormFields>  {
+	formFields:  T
+	onSubmit: (values: { [name  in  keyof  T]: string }) => void
+	formTitle?: string
+	description?: string
+}
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+type FormFields = { [name: string]: IField }
+```
+Form component gets the props listed above.
+- `formFields` is an object composed of the individual fields to be rendered in the form.
+- `title` and `description` are optional props.
+- `onSubmit` function is called when form is submitted without any validation errors.  I preferred to use generic type to define the return type of values. In these case, you know the return values will be the same keys with the formFields object that you have sent to the form component.
 
-### `yarn test`
+### Form field props
+```ts
+interface IField  {
+	label: string
+	type?: 'text'|'number'|'select'|'image'|'radio' //extendable
+	value?: string
+	placeholder?: string
+	disabled?: boolean
+	required?: boolean
+	validate?: (value: string) => string
+}
+```
+To be able to render the field's input (_default text input_) and get its value, the only mandatory property in the Field configuration object is `label`. The other properties are more feature specific.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The form component renders the fields depending on their type. Even though in this project I was asked to work with only `text` type, the `renderFields` function in the Form component is extendable with different types
 
-### `yarn build`
+### Validation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+I chose to implement the validation feature as a simple function to be passed to the field configuration that returns an error string when there's a validation error. An empty string indicates _no error_. This way the component is more generic, and lets the user be flexible. If I was working on this project professionally, I would consider to create a collection of basic validation functions and provide it to be used in combination with the Form component.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Tests
+Tests covering the functionality in Form component, and in App covering the return values are added.
