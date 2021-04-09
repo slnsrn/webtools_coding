@@ -1,16 +1,16 @@
 import React from 'react'
 
-import IField from '../types/Field'
+import { IField } from '../types/Field'
 
 interface ITextInput extends IField {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  id: string
   error: string
   value: string
-  type?: 'text' | 'number'
 }
 
 export default function TextInput(inputProps: ITextInput): JSX.Element {
-  const { id, error, label, required, onChange, value, type = 'text' } = inputProps
+  const { id, error, label, required, onChange, value } = inputProps
 
   return (
     <div className="col-span-6 sm:col-span-3">
@@ -21,7 +21,6 @@ export default function TextInput(inputProps: ITextInput): JSX.Element {
         id={id}
         value={value}
         onChange={onChange}
-        type={type}
         className={`mt-2 py-2 px-4 focus:outline-none block w-full shadow-sm sm:text-sm border rounded-md ${
           error ? ' border-red-500' : ' border-gray-300'
         }`}

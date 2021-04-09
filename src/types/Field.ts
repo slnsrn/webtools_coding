@@ -1,10 +1,11 @@
-export default interface IField {
-  id: string
+export interface IField {
   label: string
-  component?: 'text' | 'number' | 'select' | 'image' | 'radio' //extendable
+  type?: 'text' | 'number' | 'select' | 'image' | 'radio' //extendable
   value?: string
   placeholder?: string
   disabled?: boolean
   required?: boolean
   validate?: (value: string) => string
 }
+
+export type FormFields = { [name: string]: IField }

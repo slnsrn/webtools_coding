@@ -1,22 +1,24 @@
 import React, { useState, useCallback } from 'react'
 
 import useFormUtils from '../hooks/useFormUtils'
-import IField from '../types/Field'
+import { FormFields } from '../types/Field'
 
 import TextInput from './TextInput'
 
-export type FormState = { [key: string]: { value: string; error: string } }
-interface FormProps {
-  formFields: IField[]
+export type FormState<T extends FormFields> = {
+  [name in keyof T]: { value: string; error: string }
+}
+interface FormProps<T extends FormFields> {
+  formFields: T
   formTitle?: string
   description?: string
-  onSubmit: (values: { [key: string]: string }) => void
+  onSubmit: (values: { [key in keyof T]: string }) => void
 }
 
-export default function Form({ formTitle, description, onSubmit, formFields }: FormProps) {
-  // i prefer to put the utilities which are not directly related with the context out side the component.
+export default function Form<T extends FormFields>({ formTitle, description, onSubmit, formFields }: FormProps<T>) {
+
   const { initialState, doValidation } = useFormUtils(formFields)
-  const [formState, setFormState] = useState<FormState>(initialState)
+  const [formState, setFormState] = useState<FormState<T>>(initialState)
   const [buttonDisabled, setButtonDisabled] = useState(true)
 
   const handleChange = useCallback(
@@ -42,7 +44,7 @@ export default function Form({ formTitle, description, onSubmit, formFields }: F
     const errors = Object.keys(formState).map((field) => {
       const error = doValidation(field, formState[field].value)
 
-      setFormState((prevState: FormState) => ({
+      setFormState((prevState: FormState<T>) => ({
         ...prevState,
         [field]: { ...prevState[field], error },
       }))
@@ -58,9 +60,10 @@ export default function Form({ formTitle, description, onSubmit, formFields }: F
   }
 
   const handleSubmit = () => {
-    const response = Object.keys(formState).reduce((res, field) => {
+    const fields:(keyof T)[] = Object.keys(formFields)
+    const response = fields.reduce((res, field) => {
       return { ...res, [field]: formState[field].value }
-    }, {})
+    }, {} as {[field in keyof T]: string})
 
     onSubmit(response)
     setFormState(initialState)
@@ -68,8 +71,8 @@ export default function Form({ formTitle, description, onSubmit, formFields }: F
   }
 
   const renderInputs = () => {
-    return formFields.map((field) => {
-      switch (field.component) {
+    return Object.keys(formFields).map((field) => {
+      switch (formFields[field].type) {
         case 'radio':
         case 'select':
           //type of the fields can be extended
@@ -77,10 +80,11 @@ export default function Form({ formTitle, description, onSubmit, formFields }: F
         default: {
           return (
             <TextInput
-              key={field.id}
-              {...field}
-              value={formState[field.id].value}
-              error={formState[field.id].error}
+              key={field}
+              id={field}
+              {...formFields[field]}
+              value={formState[field].value}
+              error={formState[field].error}
               onChange={handleChange}
             />
           )

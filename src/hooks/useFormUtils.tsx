@@ -1,23 +1,21 @@
 import { useCallback } from 'react'
-
-import IField from '../types/Field'
-
 import { FormState } from '../components/Form'
+
+import { FormFields } from '../types/Field'
+
 
 const requiredErrorMessage = 'This field is required.'
 
-const createInitialState = (fields: IField[]): FormState => {
-  return fields.reduce((state, field) => {
-    return { ...state, [field.id]: { value: field.value || '', error: '' } }
-  }, {})
-}
-
-export default function useFormUtils(fields: IField[]) {
-  const getField = useCallback((id: string) => fields.find((field) => field.id === id), [fields])
+export default function useFormUtils<T extends FormFields>(fields: T) {
+  const createInitialState = () => {
+    return Object.keys(fields).reduce((state, field) => {
+      return { ...state, [field]: { value: fields[field].value || '', error: '' } }
+    }, {} as FormState<T>)
+  }
 
   const doValidation = useCallback(
     (id, value) => {
-      const field = getField(id)!
+      const field = fields[id]
 
       if (field?.required && value.trim() === '') {
         return requiredErrorMessage
@@ -29,8 +27,8 @@ export default function useFormUtils(fields: IField[]) {
 
       return ''
     },
-    [getField]
+    [fields]
   )
 
-  return { initialState: createInitialState(fields), doValidation, }
+  return { initialState: createInitialState(), doValidation }
 }

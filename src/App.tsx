@@ -1,24 +1,21 @@
 import { useState } from 'react'
 
-import IField from './types/Field'
 import IResponse from './types/Response'
 
 import Form from './components/Form'
 import ResponseBar from './components/ResponseBar'
+import { FormFields } from './types/Field'
 
 // i kept the fields here as it is a short one, but normal projects it can be kept in another file
-const fields: IField[] = [
-  {
-    id: 'firstName',
+const formFields = {
+  firstName: {
     label: 'First Name',
     required: true,
   },
-  {
-    id: 'lastName',
+  lastName: {
     label: 'Last Name',
   },
-  {
-    id: 'woogaName',
+  woogaName: {
     label: 'Wooga Name',
     placeholder: 'Starts with "wooga.name"',
     required: true,
@@ -26,8 +23,7 @@ const fields: IField[] = [
       return value.startsWith('wooga.name') ? '' : 'Name should start with "wooga.name"'
     },
   },
-  {
-    id: 'email',
+  email: {
     label: 'Email',
     placeholder: 'Your email',
     validate: (value: string) => {
@@ -37,23 +33,41 @@ const fields: IField[] = [
       return regEx.test(value) ? '' : 'Please enter a valid email address.'
     },
   },
-]
+}
 
 function App() {
   const [response, setResponse] = useState<IResponse | undefined>(undefined)
+  const [formValues, setFormValues] = useState<{ [key in keyof typeof formFields]: string } | undefined>(undefined)
+
+  const renderFormValues = () => {
+    return (
+      <div className="mx-auto md:max-w-md p-6">
+        <h2 className="text-md font-bold text-purple-800 mb-4"> Submitted values</h2>
+        {Object.keys(formValues!).map((value) => {
+          return (
+            <div className="text-sm font-bold text-gray-600 my-2 w-full flex space-x-4">
+              <span className="w-1/2">{value}:</span>
+              <span className="w-1/2">{formValues![value as keyof typeof formFields] || '-'}</span>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
 
   return (
     <div>
-      <ResponseBar response={response} resetResponseBar={() => setResponse(undefined)} />
       <Form
         formTitle="Personal Information"
         description="We would like to know more about you."
-        formFields={fields}
+        formFields={formFields}
         onSubmit={(values) => {
-          console.log(values)
+          setFormValues(values)
           setResponse({ message: 'Form is successfully submitted', type: 'success' })
         }}
       />
+      {formValues && renderFormValues()}
+      <ResponseBar response={response} resetResponseBar={() => setResponse(undefined)} />
     </div>
   )
 }
