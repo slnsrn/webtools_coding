@@ -4,21 +4,22 @@ import { IField } from '../types/Field'
 
 interface ITextInput extends IField {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  id: string
+  name: string
   error: string
   value: string
 }
 
 export default function TextInput(inputProps: ITextInput): JSX.Element {
-  const { id, error, label, required, onChange, value } = inputProps
+  const { name, error, label, required, onChange, value } = inputProps
 
   return (
     <div className="col-span-6 sm:col-span-3">
-      <label htmlFor={id} className="block text-sm font-medium text-purple-800">
+      <label htmlFor={name} className="block text-sm font-medium text-purple-800">
         {`${label}${required ? '*' : ''}`}
       </label>
       <input
-        id={id}
+        id={name}
+        name={name}
         value={value}
         onChange={onChange}
         className={`mt-2 py-2 px-4 focus:outline-none block w-full shadow-sm sm:text-sm border rounded-md ${

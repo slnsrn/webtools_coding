@@ -16,8 +16,8 @@ export default function useFormUtils<T extends FormFields>(fields: T) {
    * @returns an object with field ids as id:{value, error}
    */
   const createInitialState = () => {
-    return Object.keys(fields).reduce((state, field) => {
-      return { ...state, [field]: { value: fields[field].value || '', error: '' } }
+    return Object.keys(fields).reduce((state, name) => {
+      return { ...state, [name]: { value: fields[name].value || '', error: '' } }
     }, {} as FormState<T>)
   }
 
@@ -26,8 +26,8 @@ export default function useFormUtils<T extends FormFields>(fields: T) {
    * returns error message on error, and empty string when there is no error
    */
   const doValidation = useCallback(
-    (id, value) => {
-      const field = fields[id]
+    (name, value) => {
+      const field = fields[name]
 
       if (field?.required && value.trim() === '') {
         return requiredErrorMessage

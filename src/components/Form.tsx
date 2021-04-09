@@ -12,7 +12,7 @@ interface FormProps<T extends FormFields> {
   formFields: T
   formTitle?: string
   description?: string
-  onSubmit: (values: { [key in keyof T]: string }) => void
+  onSubmit: (values: { [name in keyof T]: string }) => void
 }
 
 export default function Form<T extends FormFields>({ formTitle, description, onSubmit, formFields }: FormProps<T>) {
@@ -24,15 +24,15 @@ export default function Form<T extends FormFields>({ formTitle, description, onS
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setButtonDisabled(false)
-      const { id, value } = e.target
+      const { name, value } = e.target
 
       // It is a product decision to call validate onChange. We can skip this here and just call it onSubmit.
       // In that case error state can also be separated from the formState
-      const error = doValidation(id, value)
+      const error = doValidation(name, value)
 
       setFormState({
         ...formState,
-        [id]: { value, error },
+        [name]: { value, error },
       })
     },
     [formState, doValidation]
@@ -41,12 +41,12 @@ export default function Form<T extends FormFields>({ formTitle, description, onS
   const validateState = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const errors = Object.keys(formState).map((field) => {
-      const error = doValidation(field, formState[field].value)
+    const errors = Object.keys(formState).map((name) => {
+      const error = doValidation(name, formState[name].value)
 
       setFormState((prevState: FormState<T>) => ({
         ...prevState,
-        [field]: { ...prevState[field], error },
+        [name]: { ...prevState[name], error },
       }))
 
       return error
@@ -60,10 +60,10 @@ export default function Form<T extends FormFields>({ formTitle, description, onS
   }
 
   const handleSubmit = () => {
-    const fields:(keyof T)[] = Object.keys(formFields)
-    const response = fields.reduce((res, field) => {
-      return { ...res, [field]: formState[field].value }
-    }, {} as {[field in keyof T]: string})
+    const fields: (keyof T)[] = Object.keys(formFields)
+    const response = fields.reduce((res, name) => {
+      return { ...res, [name]: formState[name].value }
+    }, {} as { [field in keyof T]: string })
 
     onSubmit(response)
     setFormState(initialState)
@@ -71,8 +71,8 @@ export default function Form<T extends FormFields>({ formTitle, description, onS
   }
 
   const renderInputs = () => {
-    return Object.keys(formFields).map((field) => {
-      switch (formFields[field].type) {
+    return Object.keys(formFields).map((name) => {
+      switch (formFields[name].type) {
         case 'radio':
         case 'select':
           //type of the fields can be extended
@@ -80,11 +80,11 @@ export default function Form<T extends FormFields>({ formTitle, description, onS
         default: {
           return (
             <TextInput
-              key={field}
-              id={field}
-              {...formFields[field]}
-              value={formState[field].value}
-              error={formState[field].error}
+              key={name}
+              name={name}
+              {...formFields[name]}
+              value={formState[name].value}
+              error={formState[name].error}
               onChange={handleChange}
             />
           )
