@@ -1,4 +1,4 @@
-# Wooga Form Component
+Form Component
 
 ## Configuration
 
